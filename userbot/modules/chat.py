@@ -23,9 +23,9 @@ from telethon.tl.types import (
     ChannelParticipantsBots,
     MessageActionChannelMigrateFrom,
 )
-from telethon.utils import get_input_location, pack_bot_file_id
+from telethon.utils import get_input_location
 
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, ALIVE_NAME, bot
+from userbot import ALIVE_NAME, BOTLOG, BOTLOG_CHATID, CMD_HELP, bot
 from userbot.events import register
 from userbot.modules.admin import get_user_from_event
 
