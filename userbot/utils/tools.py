@@ -20,7 +20,6 @@ import hashlib
 import asyncio
 import shlex
 import os
-import requests
 from os.path import basename
 import os.path
 from hachoir.metadata import extractMetadata
@@ -29,7 +28,7 @@ from html_telegraph_poster import TelegraphPoster
 from typing import Optional, Union
 from userbot import bot, LOGS
 from PIL import Image
-from typing import Tuple, Optional
+from typing import Optional
 
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.tl.types import ChannelParticipantAdmin, ChannelParticipantCreator, DocumentAttributeFilename
