@@ -244,18 +244,16 @@ async def get_chatinfo(event):
         try:
             chat_info = await event.client(GetFullChannelRequest(chat))
         except ChannelInvalidError:
-            await event.edit("**Grup/Channel Tidak Valid**")
+            await event.reply("`Invalid channel/group`")
             return None
         except ChannelPrivateError:
-            await event.edit(
-                "**Ini Adalah Grup/Channel Privasi Atau Master Dibanned Dari Sana**"
-            )
+            await event.reply("`This is a private channel/group or I am banned from there`")
             return None
         except ChannelPublicGroupNaError:
-            await event.edit("**Channel Atau Supergrup Tidak Ditemukan**")
+            await event.reply("`Channel or supergroup doesn't exist`")
             return None
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
+        except (TypeError, ValueError):
+            await event.reply("`Invalid channel/group`")
             return None
     return chat_info
 
@@ -522,6 +520,41 @@ async def _(event):
             await event.delete()
 
 
+# inviteall Ported By @VckyouuBitch 
+# From Geez - Projects <https://github.com/vckyou/Geez-UserBot>
+# Copyright © Team Geez - Project
+
+
+@register(outgoing=True, pattern=r"^\.inviteall(?: |$)(.*)")
+async def get_users(event):
+    sender = await event.get_sender()
+    me = await event.client.get_me()
+    if not sender.id == me.id:
+        man = await event.reply("`Processing...`")
+    else:
+        man = await event.edit("`Processing...`")
+    manuserbot = await get_chatinfo(event)
+    chat = await event.get_chat()
+    if event.is_private:
+        return await man.edit("**Maaf, tidak bisa menambahkan pengguna di sini**")
+    s = 0
+    f = 0
+    error = 'None'
+
+    await man.edit("**Terminal Status**\n\n`Sedang Mengumpulkan Pengguna...`")
+    async for user in event.client.iter_participants(manuserbot.full_chat.id):
+        try:
+            if error.startswith("Too"):
+                return await man.edit(f"**Terminal Finished With Error**\n(**Mungkin Mendapat Limit dari telethon Silakan coba lagi Nanti**)\n**Error** : \n`{error}`\n\n• Menambahkan `{s}` orang \n• Gagal Menambahkan `{f}` orang")
+            await event.client(functions.channels.InviteToChannelRequest(channel=chat, users=[user.id]))
+            s = s + 1
+            await man.edit(f"**Terminal Running...**\n\n• **Menambahkan** `{s}` **orang** \n• **Gagal Menambahkan** `{f}` **orang**\n\n**× LastError:** `{error}`")
+        except Exception as e:
+            error = str(e)
+            f = f + 1
+    return await man.edit(f"**Terminal Finished** \n\n• **Berhasil Menambahkan** `{s}` **orang** \n• **Gagal Menambahkan** `{f}` **orang**")
+
+
 CMD_HELP.update(
     {
         "chat": "**Plugin : **`chat`\
@@ -549,6 +582,8 @@ CMD_HELP.update(
         "invite": "**Plugin : **`invite`\
         \n\n  •  **Syntax :** `.invite` <username/user id>\
         \n  •  **Function : **Untuk Menambahkan/invite pengguna ke group chat.\
+        \n\n  •  **Syntax :** `.inviteall`\
+        \n  •  **Function : **Untuk Menambahkan/invite pengguna dari yang chat kita ke group chat.\
     "
     }
 )
