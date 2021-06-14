@@ -20,14 +20,20 @@ import hashlib
 import asyncio
 import shlex
 import os
+import requests
 from os.path import basename
 import os.path
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 from html_telegraph_poster import TelegraphPoster
 from typing import Optional, Union
 from userbot import bot, LOGS
+from PIL import Image
+from typing import Tuple, Optional
 
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.tl.types import ChannelParticipantAdmin, ChannelParticipantCreator, DocumentAttributeFilename
+from userbot import SUDO_USERS
 
 
 async def md5(fname: str) -> str:
@@ -178,3 +184,59 @@ def post_to_telegraph(title, html_format_content):
         text=html_format_content,
     )
     return post_page["url"]
+
+
+async def edit_delete(event, text, time=None, parse_mode=None, link_preview=None):
+    parse_mode = parse_mode or "md"
+    link_preview = link_preview or False
+    time = time or 5
+    if event.sender_id in SUDO_USERS:
+        reply_to = await event.get_reply_message()
+        newevent = (
+            await reply_to.reply(text, link_preview=link_preview, parse_mode=parse_mode)
+            if reply_to
+            else await event.reply(
+                text, link_preview=link_preview, parse_mode=parse_mode
+            )
+        )
+    else:
+        newevent = await event.edit(
+            text, link_preview=link_preview, parse_mode=parse_mode
+        )
+    await asyncio.sleep(time)
+    return await newevent.delete()
+
+
+async def media_to_pic(event, reply):
+    mediatype = media_type(reply)
+    if mediatype not in ["Photo", "Round Video", "Gif", "Sticker", "Video"]:
+        await edit_delete(
+            event,
+            "`In the replied message. I cant extract any image to procced further reply to proper media`",
+        )
+        return None
+    media = await reply.download_media(file="./temp")
+    event = await edit_or_reply(event, f"`Transfiguration Time! Converting....`")
+    file = os.path.join("./temp/", "meme.png")
+    if mediatype == "Sticker":
+        if media.endswith(".tgs"):
+            await runcmd(
+                f"lottie_convert.py --frame 0 -if lottie -of png '{media}' '{file}'"
+            )
+        elif media.endswith(".webp"):
+            im = Image.open(media)
+            im.save(file)
+    elif mediatype in ["Round Video", "Video", "Gif"]:
+        extractMetadata(createParser(media))
+        await runcmd(f"rm -rf '{file}'")
+        await take_screen_shot(media, 0, file)
+        if not os.path.exists(file):
+            await edit_delete(
+                event, f"`Sorry. I can't extract a image from this {mediatype}`"
+            )
+            return None
+    else:
+        im = Image.open(media)
+        im.save(file)
+    await runcmd(f"rm -rf '{media}'")
+    return [event, file, mediatype]
