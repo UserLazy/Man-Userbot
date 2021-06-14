@@ -44,7 +44,7 @@ useragent = "Mozilla/5.0 (Linux; Android 9; SM-G960F Build/PPR1.180610.011; wv) 
 opener.addheaders = [("User-agent", useragent)]
 
 
-@register(outgoing=True, pattern="^\\.random")
+@register(outgoing=True, pattern=r"^\.random")
 async def randomise(items):
     """For .random command, get a random item from the list of items."""
     itemo = (items.text[8:]).split()
@@ -138,8 +138,8 @@ async def repo_is_here(wannasee):
         f"**Hey**, __I am using__ 🔥 **Man-Userbot** 🔥\n\n"
         f"      __Thanks For Using me__\n\n"
         f"✣ **Userbot Version :** `{BOT_VER}@{UPSTREAM_REPO_BRANCH}`\n"
-        f"✣ **Group Support :** [Sharing Userbot](t.me/sharinguserbot)\n"
-        f"✣ **Channel Man :** [Lunatic0de](t.me/Lunatic0de)\n"
+        f"✣ **Group Support :** @SharingUserbot)\n"
+        f"✣ **Channel Man :** @Lunatic0de)\n"
         f"✣ **Owner Repo :** [Risman](t.me/mrismanaziz)\n"
         f"✣ **Repo :** [Man-Userbot](https://github.com/mrismanaziz/Man-Userbot)\n",
         link_preview=True,
@@ -315,7 +315,7 @@ async def send(event):
     message = await event.get_reply_message()
 
     await event.client.send_message(entity=chat, message=message)
-    await event.edit(f"**Mengirim pesan ini ke** `{chat.title}``")
+    await event.edit(f"**Berhasil Mengirim pesan ini ke** `{chat.title}`")
 
 
 CMD_HELP.update(
