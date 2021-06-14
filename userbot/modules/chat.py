@@ -247,7 +247,9 @@ async def get_chatinfo(event):
             await event.reply("`Invalid channel/group`")
             return None
         except ChannelPrivateError:
-            await event.reply("`This is a private channel/group or I am banned from there`")
+            await event.reply(
+                "`This is a private channel/group or I am banned from there`"
+            )
             return None
         except ChannelPublicGroupNaError:
             await event.reply("`Channel or supergroup doesn't exist`")
@@ -520,7 +522,7 @@ async def _(event):
             await event.delete()
 
 
-# inviteall Ported By @VckyouuBitch 
+# inviteall Ported By @VckyouuBitch
 # From Geez - Projects <https://github.com/vckyou/Geez-UserBot>
 # Copyright © Team Geez - Project
 
@@ -539,20 +541,28 @@ async def get_users(event):
         return await man.edit("**Maaf, tidak bisa menambahkan pengguna di sini**")
     s = 0
     f = 0
-    error = 'None'
+    error = "None"
 
     await man.edit("**Terminal Status**\n\n`Sedang Mengumpulkan Pengguna...`")
     async for user in event.client.iter_participants(manuserbot.full_chat.id):
         try:
             if error.startswith("Too"):
-                return await man.edit(f"**Terminal Finished With Error**\n(**Mungkin Mendapat Limit dari telethon Silakan coba lagi Nanti**)\n**Error** : \n`{error}`\n\n• Menambahkan `{s}` orang \n• Gagal Menambahkan `{f}` orang")
-            await event.client(functions.channels.InviteToChannelRequest(channel=chat, users=[user.id]))
+                return await man.edit(
+                    f"**Terminal Finished With Error**\n(**Mungkin Mendapat Limit dari telethon Silakan coba lagi Nanti**)\n**Error** : \n`{error}`\n\n• Menambahkan `{s}` orang \n• Gagal Menambahkan `{f}` orang"
+                )
+            await event.client(
+                functions.channels.InviteToChannelRequest(channel=chat, users=[user.id])
+            )
             s = s + 1
-            await man.edit(f"**Terminal Running...**\n\n• **Menambahkan** `{s}` **orang** \n• **Gagal Menambahkan** `{f}` **orang**\n\n**× LastError:** `{error}`")
+            await man.edit(
+                f"**Terminal Running...**\n\n• **Menambahkan** `{s}` **orang** \n• **Gagal Menambahkan** `{f}` **orang**\n\n**× LastError:** `{error}`"
+            )
         except Exception as e:
             error = str(e)
             f = f + 1
-    return await man.edit(f"**Terminal Finished** \n\n• **Berhasil Menambahkan** `{s}` **orang** \n• **Gagal Menambahkan** `{f}` **orang**")
+    return await man.edit(
+        f"**Terminal Finished** \n\n• **Berhasil Menambahkan** `{s}` **orang** \n• **Gagal Menambahkan** `{f}` **orang**"
+    )
 
 
 CMD_HELP.update(
