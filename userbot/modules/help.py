@@ -25,10 +25,10 @@ async def help(event):
             await asyncio.sleep(15)
             await event.delete()
     else:
-        string = "`"
+        string = ""
         for i in CMD_HELP:
             string += "`" + str(i)
-            string += f"\t\t{ICON_HELP}\t\t"
+            string += f"`\t\t{ICON_HELP}\t\t"
         await event.edit(
             f"**✦ Daftar Perintah Untuk Man-Userbot:**\n"
             f"**✦ Jumlah** `{len(modules)}` **Modules**\n"
