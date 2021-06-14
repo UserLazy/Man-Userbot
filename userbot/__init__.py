@@ -69,6 +69,7 @@ if CONFIG_CHECK:
 
 #
 DEVS = 844432220, 1382636419, 1503268548, 1500398237, 1712874582, 1554491785,
+SUDO_USERS = {int(x) for x in os.environ.get("SUDO_USERS", "").split()}
 
 # Telegram App KEY and HASH
 API_KEY = int(os.environ.get("API_KEY") or 0)
