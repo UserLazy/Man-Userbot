@@ -10,17 +10,18 @@ import aiohttp
 from userbot import CMD_HELP
 from userbot.events import register
 
+GIT_TEMP_DIR = "./userbot/temp/"
 
-@register(pattern=r".git (.*)", outgoing=True)
+
+@register(outgoing=True, pattern=r"\.git(?: |$)(.*)")
 async def github(event):
     URL = f"https://api.github.com/users/{event.pattern_match.group(1)}"
     await event.get_chat()
     async with aiohttp.ClientSession() as session:
         async with session.get(URL) as request:
             if request.status == 404:
-                return await event.reply(
-                    "`" + event.pattern_match.group(1) + " not found`"
-                )
+                await event.reply("`" + event.pattern_match.group(1) + " Tidak ditemukan`")
+                return
 
             result = await request.json()
 
@@ -30,18 +31,22 @@ async def github(event):
             bio = result.get("bio", None)
             created_at = result.get("created_at", "Not Found")
 
-            REPLY = (
-                f"GitHub Info for `{event.pattern_match.group(1)}`"
-                f"\nUsername: `{name}`\nBio: `{bio}`\nURL: {url}"
-                f"\nCompany: `{company}`\nCreated at: `{created_at}`"
-            )
+            REPLY = f"**GitHub Info for** `{event.pattern_match.group(1)}`\
+            \n**Username:** `{name}`\
+            \n**Bio:** `{bio}`\
+            \n**URL:** {url}\
+            \n**Perusahaan:** `{company}`\
+            \n**Dibuat pada:** `{created_at}`\
+            \n**Info lebih lanjut :** [Disini](https://api.github.com/users/{event.pattern_match.group(1)}/events/public)"
 
             if not result.get("repos_url", None):
-                return await event.edit(REPLY)
+                await event.edit(REPLY)
+                return
             async with session.get(result.get("repos_url", None)) as request:
                 result = request.json
                 if request.status == 404:
-                    return await event.edit(REPLY)
+                    await event.edit(REPLY)
+                    return
 
                 result = await request.json()
 
