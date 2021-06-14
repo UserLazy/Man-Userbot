@@ -20,7 +20,9 @@ async def github(event):
     async with aiohttp.ClientSession() as session:
         async with session.get(URL) as request:
             if request.status == 404:
-                await event.reply("`" + event.pattern_match.group(1) + " Tidak ditemukan`")
+                await event.reply(
+                    "`" + event.pattern_match.group(1) + " Tidak ditemukan`"
+                )
                 return
 
             result = await request.json()
