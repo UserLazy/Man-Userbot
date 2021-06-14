@@ -26,8 +26,6 @@ from dotenv import load_dotenv
 from requests import get
 from telethon.sync import TelegramClient, custom, events
 from telethon.sessions import StringSession
-from sqlalchemy.orm import scoped_session, sessionmaker
-from userbot import DB_URI
 
 load_dotenv("config.env")
 
@@ -112,7 +110,7 @@ UPSTREAM_REPO_BRANCH = os.environ.get(
 CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
 
 # SQL Database URI
-DB_URI = os.environ.get("DATABASE_URL", None)
+DB_URI = os.environ.get("DATABASE_URL") or None
 
 # OCR API key
 OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
