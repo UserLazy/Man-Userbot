@@ -81,7 +81,9 @@ async def get_user_from_event(event, uevent=None, secondgroup=None):
         if user.isnumeric():
             user = int(user)
         if not user:
-            await edit_delete(uevent, "**Gunakan username, user id, atau reply untuk gban**", 5)
+            await edit_delete(
+                uevent, "**Gunakan username, user id, atau reply untuk gban**", 5
+            )
             return None, None
         if event.message.entities:
             probable_user_mention_entity = event.message.entities[0]
@@ -92,7 +94,9 @@ async def get_user_from_event(event, uevent=None, secondgroup=None):
         try:
             user_obj = await event.client.get_entity(user)
         except (TypeError, ValueError):
-            await edit_delete(uevent, "**Tidak dapat mengambil user untuk diproses lebih lanjut**", 5)
+            await edit_delete(
+                uevent, "**Tidak dapat mengambil user untuk diproses lebih lanjut**", 5
+            )
             return None, None
     return user_obj, extra
 
