@@ -70,7 +70,7 @@ async def get_user_from_event(event, uevent=None, secondgroup=None):
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         if previous_message.from_id is None and not event.is_private:
-            await edit_delete(uevent, "`Well that's an anonymous admin !`")
+            await edit_delete(uevent, "`Nah itu admin anonim 🥺`")
             return None, None
         user_obj = await event.client.get_entity(previous_message.sender_id)
         extra = event.pattern_match.group(1)
@@ -81,7 +81,7 @@ async def get_user_from_event(event, uevent=None, secondgroup=None):
         if user.isnumeric():
             user = int(user)
         if not user:
-            await edit_delete(uevent, "`Pass the user's username, id or reply!`", 5)
+            await edit_delete(uevent, "**Gunakan username, user id, atau reply untuk gban**", 5)
             return None, None
         if event.message.entities:
             probable_user_mention_entity = event.message.entities[0]
@@ -92,12 +92,12 @@ async def get_user_from_event(event, uevent=None, secondgroup=None):
         try:
             user_obj = await event.client.get_entity(user)
         except (TypeError, ValueError):
-            await edit_delete(uevent, "`Couldn't fetch user to procced further`", 5)
+            await edit_delete(uevent, "**Tidak dapat mengambil user untuk diproses lebih lanjut**", 5)
             return None, None
     return user_obj, extra
 
 
-@register(outgoing=True, pattern="^\\.gban(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.gban(?: |$)(.*)")
 async def gban(event):
     if event.fwd_from:
         return
@@ -107,10 +107,10 @@ async def gban(event):
     if not user:
         return
     if user.id == (await event.client.get_me()).id:
-        await gbun.edit("`Why would I Gban myself`")
+        await gbun.edit("**Ngapain NgeGban diri sendiri Goblok 🐽**")
         return
     if user.id in DEVS:
-        await gbun.edit("**Tryning to Gban my Dev huh?...**")
+        await gbun.edit("**Gagal GBAN karena dia adalah Pembuat saya 🗿**")
         return
     try:
         hmm = base64.b64decode("QUFBQUFGRV9vWjVYVE5fUnVaaEtOdw==")
@@ -119,7 +119,7 @@ async def gban(event):
         pass
     if gban_sql.is_gbanned(user.id):
         await gbun.edit(
-            f"`the `[user](tg://user?id={user.id})` is already in gbanned list any way checking again`"
+            f"**Si** [Jamet](tg://user?id={user.id}) **ini sudah ada di daftar gbanned**"
         )
     else:
         gban_sql.freakgban(user.id, reason)
@@ -128,10 +128,10 @@ async def gban(event):
     count = 0
     fiz = len(san)
     if fiz == 0:
-        await gbun.edit("`you are not admin of atleast one group` ")
+        await gbun.edit("**Anda Tidak mempunyai GC yang anda admin 🥺**")
         return
     await gbun.edit(
-        f"`initiating gban of the `[user](tg://user?id={user.id}) `in {len(san)} groups`"
+        f"**initiating gban of the** [Jamet](tg://user?id={user.id}) **in** `{len(san)}` **groups**"
     )
     for i in range(fiz):
         try:
@@ -141,17 +141,17 @@ async def gban(event):
         except BadRequestError:
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"`You don't have required permission in :`\n**Chat :** (`{event.chat_id}`)\n`For banning here`",
+                f"**Anda tidak memiliki izin Banned di :**\n**Group Chat :** `{event.chat_id}`",
             )
     end = datetime.now()
     timetaken = (end - start).seconds
     if reason:
         await gbun.edit(
-            f"[{user.first_name}](tg://user?id={user.id}) `was gbanned in {count} groups in {timetaken} seconds`!!\n**Reason :** `{reason}`"
+            f"**GBanned** [{user.first_name}](tg://user?id={user.id}) **in** `{count}` **groups in** `{timetaken}` **seconds**!!\n**Reason :** `{reason}`"
         )
     else:
         await gbun.edit(
-            f"[{user.first_name}](tg://user?id={user.id}) `was gbanned in {count} groups in {timetaken} seconds`!!"
+            f"**GBanned** [{user.first_name}](tg://user?id={user.id}) **in** `{count}` **groups in** `{timetaken}` **seconds**!!\n**Added to gbanlist.**"
         )
 
     if BOTLOG and count != 0:
@@ -185,7 +185,7 @@ async def gban(event):
             pass
 
 
-@register(outgoing=True, pattern="^\\.ungban(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.ungban(?: |$)(.*)")
 async def ungban(event):
     if event.fwd_from:
         return
@@ -198,7 +198,7 @@ async def ungban(event):
         gban_sql.freakungban(user.id)
     else:
         await ungbun.edit(
-            f"the [user](tg://user?id={user.id}) `is not in your gbanned list`"
+            f"**Si** [Jamet](tg://user?id={user.id}) **ini tidak ada dalam daftar gban Anda**"
         )
         return
     san = []
@@ -206,10 +206,10 @@ async def ungban(event):
     count = 0
     fiz = len(san)
     if fiz == 0:
-        await ungbun.edit("`you are not even admin of atleast one group `")
+        await ungbun.edit("**Anda Tidak mempunyai GC yang anda admin 🥺**")
         return
     await ungbun.edit(
-        f"initiating ungban of the [user](tg://user?id={user.id}) in `{len(san)}` groups"
+        f"**initiating ungban of the** [Jamet](tg://user?id={user.id}) **in** `{len(san)}` **groups**"
     )
     for i in range(fiz):
         try:
@@ -219,17 +219,17 @@ async def ungban(event):
         except BadRequestError:
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"`You don't have required permission in :`\n**Chat : **(`{event.chat_id}`)\n`For unbaning here`",
+                f"**Anda tidak memiliki izin Banned di :**\n**Group Chat :** `{event.chat_id}`",
             )
     end = datetime.now()
     timetaken = (end - start).seconds
     if reason:
         await ungbun.edit(
-            f"[{user.first_name}](tg://user?id={user.id}`) was ungbanned in {count} groups in {timetaken} seconds`!!\n**Reason :** `{reason}`"
+            f"**Ungbanned** [{user.first_name}](tg://user?id={user.id}`) **in** `{count}` **groups in** `{timetaken}` **seconds**!!\n**Reason :** `{reason}`"
         )
     else:
         await ungbun.edit(
-            f"[{user.first_name}](tg://user?id={user.id}) `was ungbanned in {count} groups in {timetaken} seconds`!!"
+            f"**Ungbanned** [{user.first_name}](tg://user?id={user.id}) **in** `{count}` **groups in** `{timetaken}` **seconds**!!\n**Removed from gbanlist**"
         )
 
     if BOTLOG and count != 0:
@@ -256,32 +256,34 @@ async def ungban(event):
             )
 
 
-@register(outgoing=True, pattern="^\\.listgban$")
+@register(outgoing=True, pattern=r"^\.listgban$")
 async def gablist(event):
     if event.fwd_from:
         return
     gbanned_users = gban_sql.get_all_gbanned()
-    GBANNED_LIST = "Current Gbanned Users\n"
+    GBANNED_LIST = "**List Global Banned Saat Ini**\n"
     if len(gbanned_users) > 0:
         for a_user in gbanned_users:
             if a_user.reason:
-                GBANNED_LIST += f"👉 [{a_user.chat_id}](tg://user?id={a_user.chat_id}) for {a_user.reason}\n"
+                GBANNED_LIST += f"👉 [{a_user.chat_id}](tg://user?id={a_user.chat_id}) **Reason** `{a_user.reason}`\n"
             else:
                 GBANNED_LIST += (
-                    f"👉 [{a_user.chat_id}](tg://user?id={a_user.chat_id}) Reason None\n"
+                    f"👉 [{a_user.chat_id}](tg://user?id={a_user.chat_id}) `No Reason`\n"
                 )
     else:
-        GBANNED_LIST = "no Gbanned Users (yet)"
+        GBANNED_LIST = "Belum ada Pengguna yang Di-Gban"
     await edit_or_reply(event, GBANNED_LIST)
 
 
 CMD_HELP.update(
     {
         "gban": "**Plugin : **`Global Banned`\
-        \n\n  •  **Syntax :** `.gban` <username>\
-        \n  •  **Function : **Melakukan Banned Secara Global Ke Semua Grup Dimana Sebagai Admin.\
-        \n\n  •  **Syntax :** `.ungban` <username>\
+        \n\n  •  **Syntax :** `.gban` <username/id>\
+        \n  •  **Function : **Melakukan Banned Secara Global Ke Semua Grup Dimana anda Sebagai Admin.\
+        \n\n  •  **Syntax :** `.ungban` <username/id>\
         \n  •  **Function : **Membatalkan Global Banned\
+        \n\n  •  **Syntax :** `.listgban`\
+        \n  •  **Function : **Menampilkan List Global Banned\
     "
     }
 )
