@@ -4,7 +4,7 @@
 
 import asyncio
 
-from userbot import BOTLOG_CHATID
+from userbot import BOTLOG_CHATID, NC_LOG_P_M_S
 from userbot.events import register
 
 
@@ -12,9 +12,9 @@ from userbot.events import register
 async def log_tagged_messages(event):
     hmm = await event.get_chat()
 
-    if BOTLOG_CHATID:
+    if NC_LOG_P_M_S:
         sender = await event.get_sender()
-        await asyncio.sleep(5)
+        await asyncio.sleep(3)
         if not event.is_private and not (await event.get_sender()).bot:
             await event.client.send_message(
                 BOTLOG_CHATID,
