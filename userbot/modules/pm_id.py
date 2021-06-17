@@ -1,13 +1,13 @@
 # @mrismanaziz
 # Lets Try
 
-import asyncio
-from userbot import BOTLOG_CHATID, NC_LOG_P_M_S, LOGS
+from userbot import BOTLOG_CHATID, NC_LOG_P_M_S
 from userbot.events import register
 
 RECENT_USER = None
 NEWPM = None
 COUNT = 0
+
 
 @register(incoming=True, func=lambda e: e.is_private)
 async def monito_p_m_s(event):
